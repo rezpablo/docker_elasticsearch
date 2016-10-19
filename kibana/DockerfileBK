@@ -1,0 +1,19 @@
+FROM openjdk:8-jre
+
+WORKDIR /
+
+# KIBANA
+ENV KIBANA_VERSION=4.5.3
+
+RUN wget -q -O - http://download.elastic.co/kibana/kibana/kibana-${KIBANA_VERSION}-linux-x64.tar.gz |  tar -zx
+
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get install -y nodejs
+
+RUN mv kibana-${KIBANA_VERSION}-linux-x64 kibana \
+     && rm -f kibana/node/bin/node kibana/node/bin/npm \
+     && ln -s $(which node) kibana/node/bin/node \
+     && ln -s $(which npm) kibana/node/bin/npm
+
+
+CMD ["/kibana/bin/kibana"]
